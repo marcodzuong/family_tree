@@ -10,22 +10,33 @@ export default function App() {
   const { members, addMember, updateMember, deleteMember, replaceAll } = useFamilyData()
   const [selectedId, setSelectedId] = useState(null)
   const [formMode, setFormMode] = useState(null) // null | 'add' | 'edit'
+  const [addSpouseOfId, setAddSpouseOfId] = useState(null)
 
   const selectedMember = members.find((m) => m.id === selectedId) || null
   const editingMember = formMode === 'edit' ? selectedMember : null
+  const spouseOfMember = members.find((m) => m.id === addSpouseOfId) || null
 
   function handleSelectMember(id) {
     setSelectedId(id)
     setFormMode(null)
+    setAddSpouseOfId(null)
   }
 
   function handleAddClick() {
     setSelectedId(null)
+    setAddSpouseOfId(null)
+    setFormMode('add')
+  }
+
+  function handleAddSpouseClick(memberId) {
+    setSelectedId(null)
+    setAddSpouseOfId(memberId)
     setFormMode('add')
   }
 
   function handleEditClick(id) {
     setSelectedId(id)
+    setAddSpouseOfId(null)
     setFormMode('edit')
   }
 
@@ -35,9 +46,13 @@ export default function App() {
       setSelectedId(editingMember.id)
     } else {
       const newId = addMember(data)
+      if (spouseOfMember) {
+        updateMember(spouseOfMember.id, { spouseIds: [...spouseOfMember.spouseIds, newId] })
+      }
       setSelectedId(newId)
     }
     setFormMode(null)
+    setAddSpouseOfId(null)
   }
 
   function handleDelete(id) {
@@ -52,7 +67,12 @@ export default function App() {
     replaceAll(data)
     setSelectedId(null)
     setFormMode(null)
+    setAddSpouseOfId(null)
   }
+
+  const addFormPrefill = spouseOfMember
+    ? { spouseIds: [spouseOfMember.id], lineageRole: 'married-in' }
+    : null
 
   return (
     <div className="app">
@@ -68,15 +88,22 @@ export default function App() {
       </header>
 
       <main className="app-main">
-        <FamilyTreeView members={members} onSelectMember={handleSelectMember} />
+        <FamilyTreeView
+          members={members}
+          onSelectMember={handleSelectMember}
+          onAddSpouse={handleAddSpouseClick}
+        />
 
         {formMode && (
           <div className="side-panel">
             <MemberForm
               members={members}
-              initialData={editingMember}
+              initialData={formMode === 'edit' ? editingMember : addFormPrefill}
               onSubmit={handleFormSubmit}
-              onCancel={() => setFormMode(null)}
+              onCancel={() => {
+                setFormMode(null)
+                setAddSpouseOfId(null)
+              }}
               onDelete={handleDelete}
             />
           </div>
