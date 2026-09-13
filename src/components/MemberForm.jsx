@@ -10,6 +10,7 @@ const emptyForm = {
   photo: '',
   parentIds: [],
   spouseIds: [],
+  lineageRole: 'blood',
 }
 
 export default function MemberForm({ members, initialData, onSubmit, onCancel, onDelete }) {
@@ -33,8 +34,19 @@ export default function MemberForm({ members, initialData, onSubmit, onCancel, o
   function toggleMultiSelect(field, id) {
     setForm((prev) => {
       const current = prev[field]
-      const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id]
-      return { ...prev, [field]: next }
+      const adding = !current.includes(id)
+      const next = adding ? [...current, id] : current.filter((x) => x !== id)
+      const updated = { ...prev, [field]: next }
+
+      // Gợi ý tự động vai trò huyết thống khi gán cha/mẹ hoặc vợ/chồng
+      if (field === 'parentIds' && adding) {
+        const parent = members.find((m) => m.id === id)
+        if (parent?.lineageRole === 'blood') updated.lineageRole = 'blood'
+      }
+      if (field === 'spouseIds' && adding && prev.parentIds.length === 0) {
+        updated.lineageRole = 'married-in'
+      }
+      return updated
     })
   }
 
@@ -56,6 +68,21 @@ export default function MemberForm({ members, initialData, onSubmit, onCancel, o
           onChange={(e) => handleChange('name', e.target.value)}
           required
         />
+      </label>
+
+      <label>
+        Quan hệ huyết thống với dòng họ
+        <select
+          value={form.lineageRole}
+          onChange={(e) => handleChange('lineageRole', e.target.value)}
+        >
+          <option value="blood">Trực hệ (huyết thống)</option>
+          <option value="married-in">Dâu / Rể (kết hôn vào)</option>
+        </select>
+        <p className="hint">
+          Con cái sẽ tự động gợi ý là "Trực hệ" nếu cha/mẹ là trực hệ. Vợ/chồng mặc định là
+          "Dâu/Rể" — bạn có thể chỉnh lại thủ công nếu cần.
+        </p>
       </label>
 
       <label>

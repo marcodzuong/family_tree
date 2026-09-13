@@ -28,6 +28,7 @@ function buildNode(member, membersById, visited) {
     gender: member.gender,
     birthDate: member.birthDate,
     deathDate: member.deathDate,
+    lineageRole: member.lineageRole,
     spouses,
     children: children.length > 0 ? children : undefined,
   }

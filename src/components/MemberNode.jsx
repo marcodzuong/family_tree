@@ -20,6 +20,7 @@ export default function MemberNode({ nodeDatum, onNodeClick }) {
         <div
           className="member-card"
           data-gender={nodeDatum.gender || 'unknown'}
+          data-lineage={nodeDatum.lineageRole || 'blood'}
           onClick={() => onNodeClick(nodeDatum.memberId)}
         >
           <div className="member-photo">
@@ -32,7 +33,14 @@ export default function MemberNode({ nodeDatum, onNodeClick }) {
             )}
           </div>
           <div className="member-info">
-            <div className="member-name">{nodeDatum.name}</div>
+            <div className="member-name">
+              {nodeDatum.name}
+              {nodeDatum.lineageRole === 'married-in' && (
+                <span className="married-in-badge" title="Dâu/Rể">
+                  ⚭
+                </span>
+              )}
+            </div>
             {(nodeDatum.birthDate || nodeDatum.deathDate) && (
               <div className="member-dates">
                 {nodeDatum.birthDate || '?'} – {nodeDatum.deathDate || ''}

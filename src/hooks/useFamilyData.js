@@ -25,6 +25,7 @@ export function useFamilyData() {
       photo: '',
       parentIds: [],
       spouseIds: [],
+      lineageRole: 'blood',
       ...data,
     }
     setMembers((prev) => [...prev, newMember])

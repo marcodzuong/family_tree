@@ -10,6 +10,7 @@ export const seedMembers = [
     photo: '',
     parentIds: [],
     spouseIds: ['m2'],
+    lineageRole: 'blood',
   },
   {
     id: 'm2',
@@ -22,6 +23,7 @@ export const seedMembers = [
     photo: '',
     parentIds: [],
     spouseIds: ['m1'],
+    lineageRole: 'married-in',
   },
   {
     id: 'm3',
@@ -34,6 +36,7 @@ export const seedMembers = [
     photo: '',
     parentIds: ['m1', 'm2'],
     spouseIds: ['m4'],
+    lineageRole: 'blood',
   },
   {
     id: 'm4',
@@ -46,6 +49,7 @@ export const seedMembers = [
     photo: '',
     parentIds: [],
     spouseIds: ['m3'],
+    lineageRole: 'married-in',
   },
   {
     id: 'm5',
@@ -58,5 +62,6 @@ export const seedMembers = [
     photo: '',
     parentIds: ['m3', 'm4'],
     spouseIds: [],
+    lineageRole: 'blood',
   },
 ]

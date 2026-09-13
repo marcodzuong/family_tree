@@ -17,7 +17,12 @@ export default function MemberDetailPanel({ member, members, onEdit, onClose }) 
           <span className="member-photo-placeholder large">{member.name.charAt(0)}</span>
         )}
       </div>
-      <h2>{member.name}</h2>
+      <h2>
+        {member.name}{' '}
+        <span className={`lineage-badge lineage-${member.lineageRole || 'blood'}`}>
+          {member.lineageRole === 'married-in' ? 'Dâu/Rể' : 'Trực hệ'}
+        </span>
+      </h2>
       {(member.birthDate || member.deathDate) && (
         <p className="detail-dates">
           {member.birthDate || '?'} – {member.deathDate || 'nay'}
