@@ -10,14 +10,16 @@ export default function MemberDetailPanel({ member, members, onEdit, onClose }) 
       <button className="close-btn" onClick={onClose} aria-label="Đóng">
         ×
       </button>
-      <div className="detail-photo">
+      <div className="detail-photo" data-gender={member.gender || 'unknown'}>
         {member.photo ? (
           <img src={member.photo} alt={member.name} />
         ) : (
           <span className="member-photo-placeholder large">{member.name.charAt(0)}</span>
         )}
       </div>
-      <h2>
+      <h2 data-gender={member.gender || 'unknown'}>
+        {member.gender === 'male' && <span className="gender-icon">♂</span>}
+        {member.gender === 'female' && <span className="gender-icon">♀</span>}
         {member.name}{' '}
         <span className={`lineage-badge lineage-${member.lineageRole || 'blood'}`}>
           {member.lineageRole === 'married-in' ? 'Dâu/Rể' : 'Trực hệ'}

@@ -31,6 +31,8 @@ function PersonCard({ person, onClick, showAddSpouse, onAddSpouse }) {
       </div>
       <div className="member-info">
         <div className="member-name">
+          {person.gender === 'male' && <span className="gender-icon">♂</span>}
+          {person.gender === 'female' && <span className="gender-icon">♀</span>}
           {person.name}
           {person.lineageRole === 'married-in' && (
             <span className="married-in-badge" title="Dâu/Rể">

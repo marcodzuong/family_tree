@@ -198,8 +198,34 @@ body {
   font-size: 16px;
 }
 
+.member-card[data-gender="male"] {
+  border-color: #4299e1;
+  background: #ebf8ff;
+}
+
+.member-card[data-gender="male"] .member-photo {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
 .member-card[data-gender="female"] {
-  border-color: #f6ad55;
+  border-color: #ed64a6;
+  background: #fff5f9;
+}
+
+.member-card[data-gender="female"] .member-photo {
+  background: #fbb6ce;
+  color: #97266d;
+}
+
+.member-card[data-gender="unknown"] {
+  border-color: #a0aec0;
+  background: #f7fafc;
+}
+
+.member-card[data-gender="unknown"] .member-photo {
+  background: #e2e8f0;
+  color: #4a5568;
 }
 
 .member-card[data-lineage="married-in"] {
@@ -210,6 +236,29 @@ body {
   font-size: 11px;
   color: #d69e2e;
   margin-left: 4px;
+}
+
+.gender-icon {
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+[data-gender="male"] .gender-icon {
+  color: #2c5282;
+}
+
+[data-gender="female"] .gender-icon {
+  color: #97266d;
+}
+
+.detail-photo[data-gender="male"] {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.detail-photo[data-gender="female"] {
+  background: #fbb6ce;
+  color: #97266d;
 }
 
 .member-card:hover {
@@ -236,7 +285,7 @@ body {
 
 .member-photo-placeholder {
   font-weight: bold;
-  color: #718096;
+  color: inherit;
 }
 
 .member-photo-placeholder.large {
