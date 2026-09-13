@@ -11,32 +11,55 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null)
   const [formMode, setFormMode] = useState(null) // null | 'add' | 'edit'
   const [addSpouseOfId, setAddSpouseOfId] = useState(null)
+  const [addChildOfId, setAddChildOfId] = useState(null)
 
   const selectedMember = members.find((m) => m.id === selectedId) || null
   const editingMember = formMode === 'edit' ? selectedMember : null
   const spouseOfMember = members.find((m) => m.id === addSpouseOfId) || null
+  const childOfMainMember = members.find((m) => m.id === addChildOfId) || null
+  const childOfMembers = childOfMainMember
+    ? [
+        childOfMainMember,
+        ...childOfMainMember.spouseIds
+          .map((sid) => members.find((m) => m.id === sid))
+          .filter(Boolean),
+      ]
+    : []
+
+  function resetAddContext() {
+    setAddSpouseOfId(null)
+    setAddChildOfId(null)
+  }
 
   function handleSelectMember(id) {
     setSelectedId(id)
     setFormMode(null)
-    setAddSpouseOfId(null)
+    resetAddContext()
   }
 
   function handleAddClick() {
     setSelectedId(null)
-    setAddSpouseOfId(null)
+    resetAddContext()
     setFormMode('add')
   }
 
   function handleAddSpouseClick(memberId) {
     setSelectedId(null)
+    resetAddContext()
     setAddSpouseOfId(memberId)
+    setFormMode('add')
+  }
+
+  function handleAddChildClick(memberId) {
+    setSelectedId(null)
+    resetAddContext()
+    setAddChildOfId(memberId)
     setFormMode('add')
   }
 
   function handleEditClick(id) {
     setSelectedId(id)
-    setAddSpouseOfId(null)
+    resetAddContext()
     setFormMode('edit')
   }
 
@@ -52,7 +75,7 @@ export default function App() {
       setSelectedId(newId)
     }
     setFormMode(null)
-    setAddSpouseOfId(null)
+    resetAddContext()
   }
 
   function handleDelete(id) {
@@ -67,12 +90,14 @@ export default function App() {
     replaceAll(data)
     setSelectedId(null)
     setFormMode(null)
-    setAddSpouseOfId(null)
+    resetAddContext()
   }
 
   const addFormPrefill = spouseOfMember
     ? { spouseIds: [spouseOfMember.id], lineageRole: 'married-in' }
-    : null
+    : childOfMainMember
+      ? { parentIds: childOfMembers.map((p) => p.id), lineageRole: 'blood' }
+      : null
 
   return (
     <div className="app">
@@ -92,19 +117,25 @@ export default function App() {
           members={members}
           onSelectMember={handleSelectMember}
           onAddSpouse={handleAddSpouseClick}
+          onAddChild={handleAddChildClick}
         />
 
         {formMode && (
           <div className="side-panel">
             <MemberForm
-              key={formMode === 'edit' ? `edit-${editingMember?.id}` : `add-${addSpouseOfId ?? 'new'}`}
+              key={
+                formMode === 'edit'
+                  ? `edit-${editingMember?.id}`
+                  : `add-${addSpouseOfId ?? addChildOfId ?? 'new'}-${addChildOfId ? 'child' : 'spouse'}`
+              }
               members={members}
               initialData={formMode === 'edit' ? editingMember : addFormPrefill}
               spouseOfMember={formMode === 'add' ? spouseOfMember : null}
+              childOfMembers={formMode === 'add' ? childOfMembers : null}
               onSubmit={handleFormSubmit}
               onCancel={() => {
                 setFormMode(null)
-                setAddSpouseOfId(null)
+                resetAddContext()
               }}
               onDelete={handleDelete}
             />

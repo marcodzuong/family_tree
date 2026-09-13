@@ -17,12 +17,14 @@ export default function MemberForm({
   members,
   initialData,
   spouseOfMember,
+  childOfMembers,
   onSubmit,
   onCancel,
   onDelete,
 }) {
   const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData }))
   const isEditing = Boolean(initialData?.id)
+  const hasRelationContext = Boolean(spouseOfMember) || Boolean(childOfMembers?.length)
 
   const otherMembers = members.filter((m) => m.id !== initialData?.id)
 
@@ -144,11 +146,21 @@ export default function MemberForm({
         {form.photo && <img className="photo-preview" src={form.photo} alt="preview" />}
       </label>
 
-      {spouseOfMember ? (
+      {spouseOfMember && (
         <p className="hint">
           Sẽ là vợ/chồng của <strong>{spouseOfMember.name}</strong>. Không cần điền cha/mẹ.
         </p>
-      ) : (
+      )}
+
+      {childOfMembers?.length > 0 && (
+        <p className="hint">
+          Sẽ là con của{' '}
+          <strong>{childOfMembers.map((p) => p.name).join(' & ')}</strong>. Không cần chọn
+          vợ/chồng ở đây.
+        </p>
+      )}
+
+      {!hasRelationContext && (
         <fieldset>
           <legend>Cha / Mẹ</legend>
           <div className="checkbox-list">
@@ -167,7 +179,7 @@ export default function MemberForm({
         </fieldset>
       )}
 
-      {!spouseOfMember && (
+      {!hasRelationContext && (
         <fieldset>
           <legend>Vợ / Chồng</legend>
           <div className="checkbox-list">

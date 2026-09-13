@@ -1,7 +1,9 @@
+import { useState } from 'react'
+
 const CARD_WIDTH = 210
 const CONNECTOR_WIDTH = 26
 
-function PersonCard({ person, onClick, showAddSpouse, onAddSpouse }) {
+function PersonCard({ person, onClick, addMenu }) {
   return (
     <div
       className="member-card"
@@ -9,19 +11,7 @@ function PersonCard({ person, onClick, showAddSpouse, onAddSpouse }) {
       data-lineage={person.lineageRole || 'blood'}
       onClick={onClick}
     >
-      {showAddSpouse && (
-        <button
-          type="button"
-          className="add-spouse-btn"
-          title="Thêm vợ/chồng"
-          onClick={(e) => {
-            e.stopPropagation()
-            onAddSpouse(person.id)
-          }}
-        >
-          +
-        </button>
-      )}
+      {addMenu}
       <div className="member-photo">
         {person.photo ? (
           <img src={person.photo} alt={person.name} />
@@ -50,7 +40,49 @@ function PersonCard({ person, onClick, showAddSpouse, onAddSpouse }) {
   )
 }
 
-export default function MemberNode({ nodeDatum, onNodeClick, onAddSpouse }) {
+function AddMenu({ onAddChild, onAddSpouse }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="add-menu-wrapper">
+      <button
+        type="button"
+        className="add-spouse-btn"
+        title="Thêm thành viên"
+        onClick={(e) => {
+          e.stopPropagation()
+          setOpen((prev) => !prev)
+        }}
+      >
+        +
+      </button>
+      {open && (
+        <div className="add-menu" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false)
+              onAddChild()
+            }}
+          >
+            Thêm con
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false)
+              onAddSpouse()
+            }}
+          >
+            Thêm vợ/chồng
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function MemberNode({ nodeDatum, onNodeClick, onAddSpouse, onAddChild }) {
   const isVirtualRoot = nodeDatum.memberId == null
 
   if (isVirtualRoot) {
@@ -82,8 +114,12 @@ export default function MemberNode({ nodeDatum, onNodeClick, onAddSpouse }) {
               deathDate: nodeDatum.deathDate,
             }}
             onClick={() => onNodeClick(nodeDatum.memberId)}
-            showAddSpouse
-            onAddSpouse={onAddSpouse}
+            addMenu={
+              <AddMenu
+                onAddChild={() => onAddChild(nodeDatum.memberId)}
+                onAddSpouse={() => onAddSpouse(nodeDatum.memberId)}
+              />
+            }
           />
           {spouses.map((s) => (
             <div className="couple-pair" key={s.id}>

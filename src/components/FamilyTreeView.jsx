@@ -3,7 +3,7 @@ import Tree from 'react-d3-tree'
 import { buildFamilyTree } from '../utils/treeBuilder'
 import MemberNode from './MemberNode'
 
-export default function FamilyTreeView({ members, onSelectMember, onAddSpouse }) {
+export default function FamilyTreeView({ members, onSelectMember, onAddSpouse, onAddChild }) {
   const containerRef = useRef(null)
   const treeRef = useRef(null)
   const [translate, setTranslate] = useState({ x: 0, y: 0 })
@@ -38,7 +38,12 @@ export default function FamilyTreeView({ members, onSelectMember, onAddSpouse })
         separation={{ siblings: 1.8, nonSiblings: 2.2 }}
         nodeSize={{ x: 320, y: 150 }}
         renderCustomNodeElement={(rd3tProps) => (
-          <MemberNode {...rd3tProps} onNodeClick={onSelectMember} onAddSpouse={onAddSpouse} />
+          <MemberNode
+            {...rd3tProps}
+            onNodeClick={onSelectMember}
+            onAddSpouse={onAddSpouse}
+            onAddChild={onAddChild}
+          />
         )}
       />
     </div>
