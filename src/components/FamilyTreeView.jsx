@@ -35,8 +35,8 @@ export default function FamilyTreeView({ members, onSelectMember, onAddSpouse })
         pathFunc="step"
         collapsible={true}
         zoomable={true}
-        separation={{ siblings: 1.4, nonSiblings: 1.6 }}
-        nodeSize={{ x: 240, y: 140 }}
+        separation={{ siblings: 1.8, nonSiblings: 2.2 }}
+        nodeSize={{ x: 320, y: 150 }}
         renderCustomNodeElement={(rd3tProps) => (
           <MemberNode {...rd3tProps} onNodeClick={onSelectMember} onAddSpouse={onAddSpouse} />
         )}

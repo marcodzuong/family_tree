@@ -37,6 +37,8 @@ function buildNode(member, membersById, visited) {
     photo: s.photo,
     gender: s.gender,
     lineageRole: s.lineageRole,
+    birthDate: s.birthDate,
+    deathDate: s.deathDate,
   }))
 
   return {

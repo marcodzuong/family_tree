@@ -150,6 +150,7 @@ body {
   border-radius: 8px;
   padding: 6px 10px;
   width: 210px;
+  flex-shrink: 0;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
@@ -177,13 +178,24 @@ body {
   background: #ebf8ff;
 }
 
-.spouse-link {
-  text-decoration: underline dotted;
-  cursor: pointer;
+.couple-group {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
-.spouse-link:hover {
-  color: #2b6cb0;
+.couple-pair {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.couple-connector {
+  flex-shrink: 0;
+  width: 26px;
+  text-align: center;
+  color: #a0aec0;
+  font-size: 16px;
 }
 
 .member-card[data-gender="female"] {
