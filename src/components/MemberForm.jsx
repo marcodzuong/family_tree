@@ -13,7 +13,14 @@ const emptyForm = {
   lineageRole: 'blood',
 }
 
-export default function MemberForm({ members, initialData, onSubmit, onCancel, onDelete }) {
+export default function MemberForm({
+  members,
+  initialData,
+  spouseOfMember,
+  onSubmit,
+  onCancel,
+  onDelete,
+}) {
   const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData }))
   const isEditing = Boolean(initialData?.id)
 
@@ -137,39 +144,47 @@ export default function MemberForm({ members, initialData, onSubmit, onCancel, o
         {form.photo && <img className="photo-preview" src={form.photo} alt="preview" />}
       </label>
 
-      <fieldset>
-        <legend>Cha / Mẹ</legend>
-        <div className="checkbox-list">
-          {otherMembers.map((m) => (
-            <label key={m.id} className="checkbox-item">
-              <input
-                type="checkbox"
-                checked={form.parentIds.includes(m.id)}
-                onChange={() => toggleMultiSelect('parentIds', m.id)}
-              />
-              {m.name}
-            </label>
-          ))}
-          {otherMembers.length === 0 && <p className="hint">Chưa có thành viên khác.</p>}
-        </div>
-      </fieldset>
+      {spouseOfMember ? (
+        <p className="hint">
+          Sẽ là vợ/chồng của <strong>{spouseOfMember.name}</strong>. Không cần điền cha/mẹ.
+        </p>
+      ) : (
+        <fieldset>
+          <legend>Cha / Mẹ</legend>
+          <div className="checkbox-list">
+            {otherMembers.map((m) => (
+              <label key={m.id} className="checkbox-item">
+                <input
+                  type="checkbox"
+                  checked={form.parentIds.includes(m.id)}
+                  onChange={() => toggleMultiSelect('parentIds', m.id)}
+                />
+                {m.name}
+              </label>
+            ))}
+            {otherMembers.length === 0 && <p className="hint">Chưa có thành viên khác.</p>}
+          </div>
+        </fieldset>
+      )}
 
-      <fieldset>
-        <legend>Vợ / Chồng</legend>
-        <div className="checkbox-list">
-          {otherMembers.map((m) => (
-            <label key={m.id} className="checkbox-item">
-              <input
-                type="checkbox"
-                checked={form.spouseIds.includes(m.id)}
-                onChange={() => toggleMultiSelect('spouseIds', m.id)}
-              />
-              {m.name}
-            </label>
-          ))}
-          {otherMembers.length === 0 && <p className="hint">Chưa có thành viên khác.</p>}
-        </div>
-      </fieldset>
+      {!spouseOfMember && (
+        <fieldset>
+          <legend>Vợ / Chồng</legend>
+          <div className="checkbox-list">
+            {otherMembers.map((m) => (
+              <label key={m.id} className="checkbox-item">
+                <input
+                  type="checkbox"
+                  checked={form.spouseIds.includes(m.id)}
+                  onChange={() => toggleMultiSelect('spouseIds', m.id)}
+                />
+                {m.name}
+              </label>
+            ))}
+            {otherMembers.length === 0 && <p className="hint">Chưa có thành viên khác.</p>}
+          </div>
+        </fieldset>
+      )}
 
       <div className="form-actions">
         <button type="submit" className="btn btn-primary">

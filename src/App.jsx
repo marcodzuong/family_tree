@@ -97,8 +97,10 @@ export default function App() {
         {formMode && (
           <div className="side-panel">
             <MemberForm
+              key={formMode === 'edit' ? `edit-${editingMember?.id}` : `add-${addSpouseOfId ?? 'new'}`}
               members={members}
               initialData={formMode === 'edit' ? editingMember : addFormPrefill}
+              spouseOfMember={formMode === 'add' ? spouseOfMember : null}
               onSubmit={handleFormSubmit}
               onCancel={() => {
                 setFormMode(null)
